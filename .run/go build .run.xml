@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go build " type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="dushno_and_tochka" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-ldflags=&quot;-X 'github.com/artem-telnov/dushno_and_tochka_bot/internal/pkg/log.commitID=commitID'&quot;" />
+    <envs>
+      <env name="DB_ADDRESS" value="localhost" />
+      <env name="ENV_FILE" value=".env" />
+      <env name="LOG_PATH" value="stdout" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/artem-telnov/dushno_and_tochka_bot/cmd/hug_bot" />
+    <directory value="$PROJECT_DIR$/cmd/hug_bot" />
+    <method v="2" />
+  </configuration>
+</component>

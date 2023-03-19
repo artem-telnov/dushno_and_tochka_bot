@@ -1,0 +1,21 @@
+version: '3'
+
+dotenv: ['.env', '{{.HOME}}/.env']
+
+tasks:
+  run:
+    cmds:
+      - go run cmd/dushno_and_tochka_bot/main.go
+
+  local_run:
+    cmds:
+      - LOG_PATH=${PWD}/log.log go run cmd/dushno_and_tochka_bot/main.go
+
+  local_run1:
+    cmds:
+      - LOG_PATH=${PWD}/log.log go run cmd/graceful_test/main.go
+
+  linter:
+    cmds:
+      - golangci-lint run
+    aliases: [lint]
