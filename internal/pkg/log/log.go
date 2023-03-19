@@ -17,7 +17,7 @@ func UserID(userID uuid.UUID) zap.Field {
 func NewLogger() *zap.SugaredLogger {
 	logPath := os.Getenv("LOG_PATH")
 	if logPath == "" {
-		logPath = "/var/log/hug.log"
+		logPath = "/var/log/dushno_and_tochka.log"
 	}
 
 	zapConfig := zap.Config{

@@ -43,34 +43,41 @@ type Bot struct {
 	bot    *telego.Bot
 }
 
-func (bot *Bot) StartPolling() {
+func (b *Bot) StartPolling() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	done := make(chan struct{}, 1)
 
-	updates, _ := bot.bot.UpdatesViaLongPolling(nil)
+	updates, _ := b.bot.UpdatesViaLongPolling(nil)
 
-	bh, _ := th.NewBotHandler(bot.bot, updates)
+	bh, _ := th.NewBotHandler(b.bot, updates)
 
 	go func() {
 		<-sigs
 
-		bot.logger.Info("Polling is stoping")
-		bot.bot.StopLongPolling()
+		b.logger.Info("Polling is stoping")
+		b.bot.StopLongPolling()
 		bh.Stop()
-		bot.logger.Info("Long polling stoped")
+		b.logger.Info("Long polling stoped")
 
 		done <- struct{}{}
 	}()
 
 	defer bh.Stop()
-	defer bot.bot.StopLongPolling()
+	defer b.bot.StopLongPolling()
 
 	bh.Use(
 		func(next th.Handler) th.Handler {
 			return func(bot *telego.Bot, update telego.Update) {
-				go next(bot, update)
+				go func() {
+					defer func() {
+						if r := recover(); r != nil {
+							b.logger.Error("panic recovered: %s", r)
+						}
+					}()
+					next(bot, update)
+				}()
 			}
 		},
 	)
@@ -84,5 +91,5 @@ func (bot *Bot) StartPolling() {
 	bh.Start()
 
 	<-done
-	bot.logger.Info("Long polling is done")
+	b.logger.Info("Long polling is done")
 }
